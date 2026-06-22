@@ -66,7 +66,7 @@
   <div class="config">
     <div class="row">
       <label for="addr">Contract address</label>
-      <input id="addr" placeholder="0x… your deployed HonestFlashArbV2 address" />
+      <input id="addr" value="0xA9d97829C3ee43722B015BF3b75742C25FE120aC" />
     </div>
     <div class="row">
       <label for="rpc">Polygon RPC URL</label>
@@ -168,7 +168,8 @@ function msg(t, isErr){ const m = $("msg"); m.textContent = t || ""; m.className
 function short(a){ return a ? a.slice(0,6) + "…" + a.slice(-4) : "—"; }
 
 // Restore saved config
-for (const k of ["addr","rpc","lookback","refresh"]) {
+// addr is hardcoded above; only restore the other settings.
+for (const k of ["rpc","lookback","refresh"]) {
   const v = localStorage.getItem("ft_" + k);
   if (v !== null) $(k).value = v;
 }
@@ -208,12 +209,13 @@ async function getLogsChunked(contract, filter, fromBlock, toBlock){
 }
 
 async function load(){
-  const addr = $("addr").value.trim();
+  let addr;
+  try { addr = ethers.getAddress($("addr").value.trim().toLowerCase()); }
+  catch { msg("Enter a valid contract address.", true); return; }
   const rpc = $("rpc").value.trim();
   const lookback = Math.max(1000, parseInt($("lookback").value) || 100000);
-  if (!ethers.isAddress(addr)) { msg("Enter a valid contract address.", true); return; }
 
-  for (const k of ["addr","rpc","lookback","refresh"]) localStorage.setItem("ft_" + k, $(k).value);
+  for (const k of ["rpc","lookback","refresh"]) localStorage.setItem("ft_" + k, $(k).value);
 
   try {
     provider = new ethers.JsonRpcProvider(rpc);
