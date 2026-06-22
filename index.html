@@ -70,7 +70,7 @@
     </div>
     <div class="row">
       <label for="rpc">Polygon RPC URL</label>
-      <input id="rpc" value="https://polygon-rpc.com" />
+      <input id="rpc" value="https://polygon-bor-rpc.publicnode.com" />
     </div>
     <div class="row">
       <label for="lookback">Lookback (blocks)</label>
@@ -168,8 +168,8 @@ function msg(t, isErr){ const m = $("msg"); m.textContent = t || ""; m.className
 function short(a){ return a ? a.slice(0,6) + "…" + a.slice(-4) : "—"; }
 
 // Restore saved config
-// addr is hardcoded above; only restore the other settings.
-for (const k of ["rpc","lookback","refresh"]) {
+// addr and rpc are hardcoded above; only restore the tunable settings.
+for (const k of ["lookback","refresh"]) {
   const v = localStorage.getItem("ft_" + k);
   if (v !== null) $(k).value = v;
 }
